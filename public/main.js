@@ -56,6 +56,16 @@ setInterval(() => {
 }, 500);
 
 api.setEventHandler((events) => {
+  // filter out duplicate events
+  events = events.filter((event, index, self) => {
+    return (
+      index ===
+      self.findIndex((t) => {
+        return t.id === event.id;
+      })
+    );
+  });
+
   // filter animations
   const animation_events = events.filter(
     (ev) => ev.type === API_EVENT_TYPE.ANIMATED_GIFT
