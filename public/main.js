@@ -58,7 +58,7 @@ setInterval(() => {
 
 api.setEventHandler((events) => {
   // filter out duplicate events
-  events = events.filter((event, index, self) => {
+  const non_duplicate_events = events.filter((event, index, self) => {
     return (
       index ===
       self.findIndex((t) => {
@@ -68,10 +68,10 @@ api.setEventHandler((events) => {
   });
 
   // filter animations
-  const animation_events = events.filter(
+  const animation_events = non_duplicate_events.filter(
     (ev) => ev.type === API_EVENT_TYPE.ANIMATED_GIFT
   );
-  const non_animation_events = events.filter(
+  const non_animation_events = non_duplicate_events.filter(
     (ev) => ev.type !== API_EVENT_TYPE.ANIMATED_GIFT
   );
   animation_queue.push(...animation_events);
