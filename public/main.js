@@ -16,7 +16,7 @@ const animation_queue = [];
 
 const sendMessage = () => {
   if (non_animation_queue.length > 0) {
-    if (non_animation_queue[0].type == API_EVENT_TYPE.MESSAGE) {
+    if (non_animation_queue[0].type === API_EVENT_TYPE.MESSAGE) {
       // if message is older than 20 sec, we'll skip it.
       if (
         new Date().getTime() >
