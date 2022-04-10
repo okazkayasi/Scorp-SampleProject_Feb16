@@ -17,12 +17,12 @@ const animation_queue = [];
 const sendMessage = () => {
   if (non_animation_queue.length > 0) {
     if (non_animation_queue[0].type == API_EVENT_TYPE.MESSAGE) {
+      // if message is older than 20 sec, we'll skip it.
       if (
         new Date().getTime() >
         new Date(non_animation_queue[0].timestamp).getTime() +
           MESSAGE_TIMEOUT_SEC * 1000
       ) {
-        console.log("here", new Date(), non_animation_queue[0].timestamp);
         non_animation_queue.shift();
         sendMessage();
         return;
@@ -34,19 +34,20 @@ const sendMessage = () => {
 };
 
 const handleEventQueue = () => {
-  console.log(animation_queue.length, non_animation_queue.length);
-  let animation_works = true;
+  let animation_has_priority = true;
   if (animation_queue.length > 0) {
     if (isPossiblyAnimatingGift() && isAnimatingGiftUI()) {
-      animation_works = false;
+      // animation can't work now, so we'll let other events go.
+      animation_has_priority = false;
     } else {
       animateGift(animation_queue[0]);
       animation_queue.shift();
     }
   } else {
-    animation_works = false;
+    // there's no animation in queue, so we'll let other events go.
+    animation_has_priority = false;
   }
-  if (!animation_works) {
+  if (!animation_has_priority) {
     sendMessage();
   }
 };
